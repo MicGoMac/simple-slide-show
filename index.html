@@ -5,23 +5,22 @@
 <link rel="stylesheet" href="css.css">
 <body>
  
-	  <img class="bottom" src="img/P5182654.JPG" >
+	  <img id="bottom" src="img/P5182654.JPG" >
 	  <img id="top" src="img/P5182659.JPG" >
  	<div class="caption">1020-03-11</div>
 <script>
 //http://css3.bradshawenterprises.com/cfimg/
 
 var step=100;
-
+var img_max_index; // = imgs.length-1; //-1 makes compatible with array
 var imgs = get_images();
 var img_index = 0;
-var img_max_index = imgs.length-1;
+
 var tp = document.getElementById("top");
 interval = 5000;
 
+swap_images();
 setInterval(swap_images, interval);
-//swap_images();
-//carousel();
 
 function carousel() {
 	if ( step != 0 ){
@@ -36,31 +35,33 @@ function carousel() {
 }
 
 function get_images() {
-	return ["P5182654.JPG", "P5182659.JPG", "P5182660.JPG", "P5182666.JPG"];
+	arr= ["P5182654.JPG", "P5182659.JPG", "P5182660.JPG", "P5182666.JPG"];
+	arr.push( arr[0]);  //add the tail to end
+	img_max_index=arr.length-1;   //-1 makes compatible with array
+	return arr;
 }
 
 function swap_images(){
-	 //var tp = document.getElementsByClassName("top");
-	 var bm = document.getElementsByClassName("bottom");
+	 //swaps bottom to top and load bottom with the next
+	 //call caroousel , which will do the fade by itself in a second
+	 
+	var bm = document.getElementById("bottom");
 	
-	next_index = img_index+1;
-	if ( next_index > img_max_index){ next_index = 0 }
+	
+	if ( img_index == img_max_index){ 
+		next_index = 0; 
+	}else{
+		next_index = img_index+1;
+	}
 	
 	//new image is under, at bottom. then the top fade out
-	document.getElementsByClassName("bottom")[0].src = "img/" + imgs[next_index];
+	bm.src = "img/" + imgs[next_index];
 	tp.src = "img/" + imgs[img_index];
 	
-	
-	tp.opacity = 1;
-	
-	
-	console.log(  img_index+1  );
-	
-	console.log( "b>>" + document.getElementsByClassName("bottom")[0].src );
-	//console.log( "t     >>" + tp );
-	console.log(tp);
+	//console.log(  next_index  );
 	
 	img_index++;
+	
 	if ( img_index == img_max_index ){
 		get_images();
 		img_index = 0;
