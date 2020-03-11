@@ -7,22 +7,24 @@
 	  margin:0 auto;
 	  #opacity:1;
 	   border-radius: 18px;
-	}
-	
-	.top {
-	  position:absolute;
-	  left:0;
-	  -webkit-transition: opacity 1s ease-in-out;
-	  -moz-transition: opacity 1s ease-in-out;
-	  -o-transition: opacity 1s ease-in-out;
-	  transition: opacity 1s ease-in-out;
-	}
+}
 
-	.caption {
-		position:relative;
-		color:white;
-	}
-	
-	#.top:hover {
-	 # opacity:0;
-	#}
+#top {
+  position:absolute;
+  left:0;
+  
+  #-webkit-transition: opacity 1s ease-in-out;
+  #-moz-transition: opacity 1s ease-in-out;
+  #-o-transition: opacity 1s ease-in-out;
+  #transition: opacity 1s ease-in-out;
+}
+
+.caption {
+	position:relative;
+	color:white;
+}
+
+.caption:hover {
+	#not work
+  color:red;
+}
