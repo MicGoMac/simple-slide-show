@@ -2,9 +2,9 @@
 	  position:absolute;
 	  top:0px;
 	  left:0px;
-	  height:281px;
-	  width:450px;
-	  margin:0 auto;
+	  height:768px;
+	  width:1024px;
+	  margin:0 150px;
 	  #opacity:1;
 	   border-radius: 18px;
 }
@@ -27,4 +27,8 @@
 .caption:hover {
 	#not work
   color:red;
+}
+
+body{
+	background-color:black;
 }
