@@ -5,4 +5,4 @@ languages: php, js
 
 Disappointed by the examples in popular tuturial sites, I made this to serve myself
 
-It auto reads files from img/ directory and plays
+It auto reads files from sub directories of img/ and plays
