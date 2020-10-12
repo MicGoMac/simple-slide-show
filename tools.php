@@ -2,7 +2,7 @@
 
 
 //e,g, resizeto($src, "/Users/michael/test.jpg", 300) ;
-
+//dependency, imagemagick
 function resizeto ( $src, $desDir, $desired_width){
  
 	/* read the source image */
