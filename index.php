@@ -1,4 +1,19 @@
 <?php
+/*
+the flow:
+
+on start
+	php 
+	reload_files( the chosen set )
+		files	( array of files )
+		first_files  ( html img tag with filename hard cored )
+		
+	display first_files	
+	
+	js
+	swap img from arr at interval: setInterval(swap_images, interval);
+*/
+
 
 //load new set if 
 if ($_GET != array() ){
@@ -27,6 +42,7 @@ function reload_files($set_name){
 	//prepare the first 2 loaded files
 	$bottom_file = "img/$set_name/" . $ran_files[1];
 	$top_file = "img/$set_name/" . $ran_files[0];
+	
 	$first_files ="<img id='bottom' src='$bottom_file' ><img id='top' src='$top_file' >";
 	  
 	//echo $first_files; exit;
@@ -90,6 +106,14 @@ var img_index = 0;
 var tp = document.getElementById("top");
 interval = 10000;
 
+var screen_size = {
+  width: window.innerWidth || document.body.clientWidth,
+  height: window.innerHeight || document.body.clientHeight
+}
+//alert(screen_size['width']);
+//alert(screen_size['height']);
+
+
 swap_images();
 setInterval(swap_images, interval);
 
@@ -130,6 +154,13 @@ function swap_images(){
 	//new image is under, at bottom. then the top fade out
 	bm.src = "img/<?php echo $set_name; ?>/" + imgs[next_index];
 	tp.src = "img/<?php echo $set_name; ?>/" + imgs[img_index];
+	
+	//to do: how to get their aspect ratio and display properly?
+	bm_height = bm.naturalHeight;
+	bm_width = bm.naturalWidth;
+	
+	
+	//alert(bm_height);
 	
 	//console.log(  next_index  );
 	
