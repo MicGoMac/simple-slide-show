@@ -25,6 +25,11 @@ if ($_GET != array() ){
 
 $js_arr = reload_files($set_name)["files"];
 $first_files = reload_files($set_name)["first_files"];
+$aspects = reload_files($set_name)["aspects"];
+
+
+//print_r($js_arr); exit();
+//print_r($first_files); exit();
 
 
 function reload_files($set_name){
@@ -34,9 +39,34 @@ function reload_files($set_name){
 	shuffle( $files); 
 	
 	$ran_files = array();
+	$aspect_info = array();
+	
 	foreach($files as $f){
+		//to do: decide if it's landscape or portrait
+		$s = getimagesize($f);
+		
+		
+/*
+		echo $f; 
+		echo "<br />";
+		print_r($s); exit;
+*/
+		if ( $s[0]>$s[1] ) {
+			//landscape
+			$aspect_info[] = "H";
+		}else{
+			//portrait
+			$aspect_info[] = "V";
+		}
+
 		$ran_files[] = basename($f);
 	}
+	
+	//newly added
+	$js__aspect_arr= '["'. implode( '","', $aspect_info) . '"]';
+	
+	
+//print_r($js__aspect_arr); exit();	
 	$js_arr= '["'. implode( '","', $ran_files) . '"]';
 	
 	//prepare the first 2 loaded files
@@ -46,7 +76,7 @@ function reload_files($set_name){
 	$first_files ="<img id='bottom' src='$bottom_file' ><img id='top' src='$top_file' >";
 	  
 	//echo $first_files; exit;
-	return array( "files" => $js_arr, "first_files"=> $first_files);
+	return array( "files" => $js_arr, "first_files"=> $first_files, "aspects"=>$js__aspect_arr);
 }
 	
 function Listfiles($dir,$ext_arr, $filter){
@@ -101,6 +131,8 @@ function get_files_set( $number_of_files, $set = null, $width, $height ){
 var step=100;
 var img_max_index; // = imgs.length-1; //-1 makes compatible with array
 var imgs = get_images();
+//var imgs_data = get_images_data();
+
 var img_index = 0;
 //var set_name = "'" + "'" ;
 var tp = document.getElementById("top");
@@ -112,7 +144,7 @@ var screen_size = {
 }
 //alert(screen_size['width']);
 //alert(screen_size['height']);
-
+window.image_aspects = <?php echo $aspects; ?>;
 
 swap_images();
 setInterval(swap_images, interval);
@@ -137,6 +169,18 @@ function get_images() {
 	//console.log(arr);
 	return arr;
 }
+
+
+function get_images_data() {
+	arr = window.image_aspects;
+	
+	arr.push( arr[0]);  //add the tail to end
+	img_max_index=arr.length-1;   //-1 makes compatible with array
+	//console.log(arr);
+	return arr;
+}
+
+
 
 function swap_images(){
 	 //swaps bottom to top and load bottom with the next
@@ -167,7 +211,9 @@ function swap_images(){
 	img_index++;
 	
 	if ( img_index == img_max_index ){
+		//correct?
 		get_images();
+		//imgs_data = get_images_data();
 		img_index = 0;
 	}
 	
