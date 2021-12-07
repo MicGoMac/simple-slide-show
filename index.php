@@ -2,6 +2,11 @@
 /*
 Pure javascript without using any plug-in like Jquery
 
+more features to add: 
+	config page to 
+		adjust intervals
+		choice of background music
+	
 the flow:
 
 on start
@@ -139,7 +144,13 @@ console.log(screen_size['height']);
 
 window.image_aspects = <?php echo $aspects; ?>;
 
+//hold still the first image for var interval ms
+setTimeout(function(){ console.log("Show start"); }, interval);
+
+//after that:
 swap_images();
+
+//this makes a loop forever
 setInterval(swap_images, interval);
 
 //adjust fade speed to own taste
