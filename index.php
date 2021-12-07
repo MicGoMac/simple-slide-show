@@ -1,12 +1,14 @@
 <?php
 /*
+Pure javascript without using any plug-in like Jquery
+
 the flow:
 
 on start
 	php 
 	reload_files( the chosen set )
 		files	( array of files )
-		first_files  ( html img tag with filename hard cored )
+		first_files  ( first 2 images to show, with img tag with filename hard cored )
 		
 	display first_files	
 	
@@ -15,7 +17,7 @@ on start
 */
 
 
-//load new set if 
+//load new set if there is param in query
 if ($_GET != array() ){
 	$set_name = $_GET["set"];
 }else{
@@ -23,13 +25,11 @@ if ($_GET != array() ){
 }
 //echo $set_name; exit;
 
-$js_arr = reload_files($set_name)["files"];
-$first_files = reload_files($set_name)["first_files"];
-$aspects = reload_files($set_name)["aspects"];
+$loaded_set = reload_files($set_name);
 
-
-//print_r($js_arr); exit();
-//print_r($first_files); exit();
+$js_arr = $loaded_set["files"];
+$first_files = $loaded_set["first_files"];
+$aspects = $loaded_set["aspects"];
 
 
 function reload_files($set_name){
@@ -42,15 +42,10 @@ function reload_files($set_name){
 	$aspect_info = array();
 	
 	foreach($files as $f){
-		//to do: decide if it's landscape or portrait
+		//keep track of landscape or portrait 
+		
 		$s = getimagesize($f);
-		
-		
-/*
-		echo $f; 
-		echo "<br />";
-		print_r($s); exit;
-*/
+
 		if ( $s[0]>$s[1] ) {
 			//landscape
 			$aspect_info[] = "H";
@@ -62,20 +57,17 @@ function reload_files($set_name){
 		$ran_files[] = basename($f);
 	}
 	
-	//newly added
+	//to do: read this data, on img display, adjust
 	$js__aspect_arr= '["'. implode( '","', $aspect_info) . '"]';
 	
-	
-//print_r($js__aspect_arr); exit();	
 	$js_arr= '["'. implode( '","', $ran_files) . '"]';
 	
-	//prepare the first 2 loaded files
+	//prepare the first 2 loaded files, one overlaps the other, so to allow a fade
 	$bottom_file = "img/$set_name/" . $ran_files[1];
 	$top_file = "img/$set_name/" . $ran_files[0];
 	
 	$first_files ="<img id='bottom' src='$bottom_file' ><img id='top' src='$top_file' >";
-	  
-	//echo $first_files; exit;
+
 	return array( "files" => $js_arr, "first_files"=> $first_files, "aspects"=>$js__aspect_arr);
 }
 	
@@ -126,15 +118,14 @@ function get_files_set( $number_of_files, $set = null, $width, $height ){
 	  
  	<div class="caption">Album: <?php echo $set_name ?></div>
 <script>
-//http://css3.bradshawenterprises.com/cfimg/
+//based on sample codes from http://css3.bradshawenterprises.com/cfimg/
 
 var step=100;
 var img_max_index; // = imgs.length-1; //-1 makes compatible with array
 var imgs = get_images();
-//var imgs_data = get_images_data();
 
 var img_index = 0;
-//var set_name = "'" + "'" ;
+
 var tp = document.getElementById("top");
 interval = 10000;
 
@@ -142,13 +133,16 @@ var screen_size = {
   width: window.innerWidth || document.body.clientWidth,
   height: window.innerHeight || document.body.clientHeight
 }
-//alert(screen_size['width']);
-//alert(screen_size['height']);
+
+console.log(screen_size['width']);
+console.log(screen_size['height']);
+
 window.image_aspects = <?php echo $aspects; ?>;
 
 swap_images();
 setInterval(swap_images, interval);
 
+//adjust fade speed to own taste
 function carousel() {
 	if ( step != 0 ){
 		op = step/100;
@@ -164,9 +158,9 @@ function carousel() {
 function get_images() {
 	arr=  <?php echo $js_arr; ?> ;
 	
-	arr.push( arr[0]);  //add the tail to end
-	img_max_index=arr.length-1;   //-1 makes compatible with array
-	//console.log(arr);
+	arr.push( arr[0]);  //repeat first item to end of array
+	img_max_index=arr.length-1;   //-1 as array starts at 0
+	
 	return arr;
 }
 
@@ -175,8 +169,8 @@ function get_images_data() {
 	arr = window.image_aspects;
 	
 	arr.push( arr[0]);  //add the tail to end
-	img_max_index=arr.length-1;   //-1 makes compatible with array
-	//console.log(arr);
+	img_max_index=arr.length-1;   //-1 as array starts at 0
+
 	return arr;
 }
 
@@ -211,14 +205,11 @@ function swap_images(){
 	img_index++;
 	
 	if ( img_index == img_max_index ){
-		//correct?
 		get_images();
-		//imgs_data = get_images_data();
 		img_index = 0;
 	}
 	
 	carousel();
-	//setTimeout(carousel, 1500);
 }
 
 </script>
